@@ -112,3 +112,35 @@
     
 })(jQuery);
 
+//Contact Form
+if ($('#email-form').length) {
+    $('#submit').click(function () {
+        var form = '#email-form';
+        var username = $('#username').val();
+        var email = $('#email').val();
+        
+        if (username === '' || email === '') {
+            $('#response').html('<div class="failed">Please fill the required fields.</div>');
+            return false;
+        }
+        
+        $.ajax({
+            url: "sendemail.php",
+            method: "POST",
+            data: $(form).serialize(),
+            beforeSend: function () {
+                $('#response').html('<div class="text-info"><img src="images/icons/preloader.gif"> Loading...</div>');
+            },
+            success: function (data) {
+                $('form').trigger("reset");
+                $('#response').fadeIn().html(data);
+                setTimeout(function () {
+                    $('#response').fadeOut("slow");
+                }, 1000);
+            },
+            error: function (xhr, status, error) {
+                $('#response').html('<div class="failed">An error occurred while processing your request. Please try again later.</div>');
+            }
+        });
+    });
+}
